@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:greengrocer/src/config/custom_colors.dart';
 
 class QuantityWidget extends StatelessWidget {
   const QuantityWidget({super.key});
@@ -23,20 +24,63 @@ class QuantityWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            height: 50,
-            width: 50,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.remove,
-              color: Colors.white,
-              size: 16,
+          _QuantityButton(
+            icon: Icons.remove,
+            color: Colors.grey,
+            onPressed: () {},
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6),
+            child: Text(
+              '1kg',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
+          _QuantityButton(
+            icon: Icons.add,
+            color: CustomColors.customSwatchColor,
+            onPressed: () {},
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _QuantityButton extends StatelessWidget {
+  final Color color;
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _QuantityButton({
+    Key? key,
+    required this.color,
+    required this.icon,
+    required this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(50),
+        onTap: onPressed,
+        child: Ink(
+          height: 25,
+          width: 25,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 16,
+          ),
+        ),
       ),
     );
   }
