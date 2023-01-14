@@ -1,4 +1,5 @@
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:add_to_cart_animation/add_to_cart_icon.dart';
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
@@ -7,6 +8,7 @@ import 'package:greengrocer/src/config/custom_colors.dart';
 import 'package:greengrocer/src/pages/home/components/category_tile.dart';
 import 'package:greengrocer/src/config/app_data.dart' as appData;
 import 'package:greengrocer/src/pages/home/components/item_tile.dart';
+import 'package:greengrocer/src/services/utils_services.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -21,6 +23,12 @@ class _HomeTabState extends State<HomeTab> {
   GlobalKey<CartIconKey> globalKeyCartItems = GlobalKey<CartIconKey>();
 
   late Function(GlobalKey) runAddToCardAnimation;
+
+  void itemSelectedCartAnimations(GlobalKey gkImage) {
+    runAddToCardAnimation(gkImage);
+  }
+
+  final UtilsServices utilsServices = UtilsServices();
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +76,12 @@ class _HomeTabState extends State<HomeTab> {
                     fontSize: 12,
                   ),
                 ),
-                child: Icon(
-                  Icons.shopping_cart,
-                  color: CustomColors.customSwatchColor,
+                child: AddToCartIcon(
+                  key: globalKeyCartItems,
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: CustomColors.customSwatchColor,
+                  ),
                 ),
               ),
             ),
@@ -79,11 +90,11 @@ class _HomeTabState extends State<HomeTab> {
       ),
 
       body: AddToCartAnimation(
-        gkCart: GlobalKeyCartItems,
+        gkCart: globalKeyCartItems,
         previewDuration: const Duration(milliseconds: 100),
         previewCurve: Curves.ease,
-        receiveCreateAddToCardAnimationMethod: (AddToCartAnimationMethod) {
-          runAddToCardAnimation = AddToCartAnimationMethod;
+        receiveCreateAddToCardAnimationMethod: (addToCardAnimationMethod) {
+          runAddToCardAnimation = addToCardAnimationMethod;
         },
         child: Column(
           children: [
@@ -154,8 +165,8 @@ class _HomeTabState extends State<HomeTab> {
                 itemCount: appData.items.length,
                 itemBuilder: (_, index) {
                   return ItemTile(
-                    item: appData.items[index],
-                  );
+                      item: appData.items[index],
+                      cartAnimationMethod: itemSelectedCartAnimations);
                 },
               ),
             ),
